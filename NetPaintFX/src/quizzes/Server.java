@@ -28,6 +28,7 @@ public class Server {
 			}
 // Close the connection
 			connection.close();
+			server.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {

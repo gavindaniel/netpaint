@@ -17,13 +17,14 @@ public class Server {
 			ObjectOutputStream output = new ObjectOutputStream(connection.getOutputStream());
 			ObjectInputStream input = new ObjectInputStream(connection.getInputStream());
 // Do some I/O.
+			Boolean flag = false;
 			String messageFromClient = "";
-			String upperClient = "";
-			while ( !upperClient.equals("QUIT") ){
+			while ( !flag ){
 				messageFromClient = (String) input.readObject();
-				upperClient = messageFromClient.toUpperCase();
 				System.out.println("Server read: " + messageFromClient);
 				output.writeObject("Hi client, you wrote: " + messageFromClient);
+				messageFromClient = messageFromClient.toUpperCase().replace(" ", "");
+				if (messageFromClient.equals("QUIT")) flag = true;
 			}
 // Close the connection
 			connection.close();

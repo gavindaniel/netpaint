@@ -29,7 +29,7 @@ import model.Line;   // This means you must have class Line in the model package
   * A Canvas exists in this BorderPane that will draw all
   * PaintObjects stored in the Vector<PaintObject> object.
   * 
-  * @author YOUR NAME
+  * @author Gavin Daniel
  */
 public class DrawVectorOfPaintObjects extends Application {
 

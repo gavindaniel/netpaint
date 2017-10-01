@@ -16,16 +16,21 @@ public class Client {
 			ObjectOutputStream output = new ObjectOutputStream(server.getOutputStream());
 			ObjectInputStream input = new ObjectInputStream(server.getInputStream());
 // Do some I/O with the server
+			Boolean flag = false;
 			String userInput = "";
-			String upperInput = "";
-			while ( !upperInput.equals("QUIT") ){
+//			String upperInput = "";
+			while ( !flag ){
 				System.out.print("Enter a message: ");
-				Scanner sc = new Scanner(System.in);
-				userInput = sc.nextLine();
-				upperInput = userInput.toUpperCase();
+				Scanner keyboard = new Scanner(System.in);
+				userInput = keyboard.nextLine();
 				output.writeObject(userInput);
 				String messageFromServer = (String) input.readObject();
-				System.out.println(messageFromServer);
+				System.out.println(messageFromServer);	
+				userInput = userInput.replaceAll(" ", "");
+				if (userInput.toUpperCase().equals("QUIT")) {
+					flag = true;
+					keyboard.close();
+				}
 			}
 			System.out.println("You entered the magic word");
 // Close the connection to the server

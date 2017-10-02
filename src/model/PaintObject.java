@@ -5,7 +5,6 @@ import java.awt.Point;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-
 /**
  * PaintObject
  * 
@@ -25,17 +24,35 @@ public abstract class PaintObject {
 		this.color = c;
 	}
 	public void setPoints(Point p1, Point p2){
-		if (p1.getX() < p2.getX() && p1.getY() < p2.getY()){
-			this.p_UPPER_LEFT = p1;
-			this.p_BOTTOM_RIGHT = p2;
+		if (p1.getX() < p2.getX()){
+			if (p1.getY() < p2.getY()){
+				this.p_UPPER_LEFT = new Point((int)p1.getX(), (int)p1.getY());
+				this.p_BOTTOM_RIGHT = new Point((int)p2.getX(), (int)p2.getY());
+			}
+			else {
+				this.p_UPPER_LEFT = new Point((int)p1.getX(), (int)p2.getY());
+				this.p_BOTTOM_RIGHT = new Point((int)p2.getX(), (int)p1.getY());
+			}
 		}
 		else {
-			this.p_UPPER_LEFT = p2;
-			this.p_BOTTOM_RIGHT = p1;
+			if (p1.getY() < p2.getY()){
+				this.p_UPPER_LEFT = new Point((int)p2.getX(), (int)p1.getY());
+				this.p_BOTTOM_RIGHT = new Point((int)p1.getX(), (int)p2.getY());
+			}
+			else {
+				this.p_UPPER_LEFT = new Point((int)p2.getX(), (int)p2.getY());
+				this.p_BOTTOM_RIGHT = new Point((int)p1.getX(), (int)p1.getY());
+			}
 		}
 	}
+	public void setPoint1(Point p1){
+		this.p_UPPER_LEFT = p1;
+	}
+	public void setPoint2(Point p2){
+		this.p_BOTTOM_RIGHT = p2;
+	}
 	public void setImage(String image_src){
-		this.img = new Image(image_src);
+		this.img = new Image("doge.jpeg");
 	}
 	public Color getColor(){
 		return this.color;

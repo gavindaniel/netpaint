@@ -13,7 +13,7 @@ import javafx.stage.Stage;
   * also listen to the server to read the Vector of PaintObjects and
   * repaint every time any client adds a new one. 
   * 
-  * @author YOUR NAME
+  * @author Gavin Daniel
   * 
  */
 public class Client extends Application {

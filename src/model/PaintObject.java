@@ -52,7 +52,7 @@ public abstract class PaintObject {
 		this.p_BOTTOM_RIGHT = p2;
 	}
 	public void setImage(String image_src){
-		this.img = new Image("doge.jpeg");
+		this.img = new Image("file:images/doge.jpeg");
 	}
 	public Color getColor(){
 		return this.color;

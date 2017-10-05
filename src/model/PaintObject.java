@@ -2,6 +2,7 @@ package model;
 
 import java.awt.Point;
 
+import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -16,9 +17,11 @@ import javafx.scene.paint.Color;
  */
 public abstract class PaintObject {
 	private Color color;
-	private Point p_UPPER_LEFT;
-	private Point p_BOTTOM_RIGHT;
+	private Point p1;
+	private Point p2;
 	private Image img;
+	
+	
 	
 	public void setColor(Color c){
 		this.color = c;
@@ -26,30 +29,30 @@ public abstract class PaintObject {
 	public void setPoints(Point p1, Point p2){
 		if (p1.getX() < p2.getX()){
 			if (p1.getY() < p2.getY()){
-				this.p_UPPER_LEFT = new Point((int)p1.getX(), (int)p1.getY());
-				this.p_BOTTOM_RIGHT = new Point((int)p2.getX(), (int)p2.getY());
+				this.p1 = new Point((int)p1.getX(), (int)p1.getY());
+				this.p2 = new Point((int)p2.getX(), (int)p2.getY());
 			}
 			else {
-				this.p_UPPER_LEFT = new Point((int)p1.getX(), (int)p2.getY());
-				this.p_BOTTOM_RIGHT = new Point((int)p2.getX(), (int)p1.getY());
+				this.p1 = new Point((int)p1.getX(), (int)p2.getY());
+				this.p2 = new Point((int)p2.getX(), (int)p1.getY());
 			}
 		}
 		else {
 			if (p1.getY() < p2.getY()){
-				this.p_UPPER_LEFT = new Point((int)p2.getX(), (int)p1.getY());
-				this.p_BOTTOM_RIGHT = new Point((int)p1.getX(), (int)p2.getY());
+				this.p1 = new Point((int)p2.getX(), (int)p1.getY());
+				this.p2 = new Point((int)p1.getX(), (int)p2.getY());
 			}
 			else {
-				this.p_UPPER_LEFT = new Point((int)p2.getX(), (int)p2.getY());
-				this.p_BOTTOM_RIGHT = new Point((int)p1.getX(), (int)p1.getY());
+				this.p1 = new Point((int)p2.getX(), (int)p2.getY());
+				this.p2 = new Point((int)p1.getX(), (int)p1.getY());
 			}
 		}
 	}
 	public void setPoint1(Point p1){
-		this.p_UPPER_LEFT = p1;
+		this.p1 = p1;
 	}
 	public void setPoint2(Point p2){
-		this.p_BOTTOM_RIGHT = p2;
+		this.p2 = p2;
 	}
 	public void setImage(String image_src){
 		this.img = new Image("file:images/doge.jpeg");
@@ -57,38 +60,38 @@ public abstract class PaintObject {
 	public Color getColor(){
 		return this.color;
 	}
-	public Point getUpperLeft(){
-		return this.p_UPPER_LEFT;
+	public Point getPoint1(){
+		return this.p1;
 	}
-	public Point getBottomRight(){
-		return this.p_BOTTOM_RIGHT;
+	public Point getPoint2(){
+		return this.p2;
 	}
 	public Image getImage(){
 		return this.img;
 	}
 
 	public double getWidth(){
-		return ( Math.abs(this.getUpperLeft().getX() - this.getBottomRight().getX()) );
+		return ( Math.abs(this.getPoint1().getX() - this.getPoint2().getX()) );
 	}
 	public double getHeight(){
-		return ( Math.abs(this.getUpperLeft().getY() - this.getBottomRight().getY()) );
+		return ( Math.abs(this.getPoint1().getY() - this.getPoint2().getY()) );
 	}
 	public void draw(GraphicsContext gc) {
 		// TODO Auto-generated method stub
 		if (this instanceof Line){
 			gc.setStroke(this.getColor());
-			gc.strokeLine(this.getUpperLeft().getX(), this.getUpperLeft().getY(), this.getBottomRight().getX(), this.getBottomRight().getY());
+			gc.strokeLine(this.getPoint1().getX(), this.getPoint1().getY(), this.getPoint2().getX(), this.getPoint2().getY());
 		}
 		else if (this instanceof Rectangle){
 			gc.setFill(this.getColor());
-			gc.fillRect(this.getUpperLeft().getX(), this.getUpperLeft().getY(), this.getWidth(), this.getHeight());
+			gc.fillRect(this.getPoint1().getX(), this.getPoint1().getY(), this.getWidth(), this.getHeight());
 		}
 		else if (this instanceof Oval){
 			gc.setFill(this.getColor());
-			gc.fillOval(this.getUpperLeft().getX(), this.getUpperLeft().getY(), this.getWidth(), this.getHeight());
+			gc.fillOval(this.getPoint1().getX(), this.getPoint1().getY(), this.getWidth(), this.getHeight());
 		}
 		else if (this instanceof Picture){
-			gc.drawImage(this.getImage(), this.getUpperLeft().getX(), this.getUpperLeft().getY(), this.getWidth(), this.getHeight());
+			gc.drawImage(this.getImage(), this.getPoint1().getX(), this.getPoint1().getY(), this.getWidth(), this.getHeight());
 		}
 	}
 }

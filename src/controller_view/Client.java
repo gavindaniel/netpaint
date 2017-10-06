@@ -148,7 +148,9 @@ public class Client extends Application implements Observer {
 
 				    	  Point p2 = new Point();
 				    	  p2.setLocation(xLoc, yLoc);
-				    	  currObj.setPoint2(p2);
+				    	  Point p1 = currObj.getPoint1();
+				    	  //currObj.setPoint2(p2);
+				    	  currObj.updatePoints(p1,p2);
 				    	  objDone = true;
 		//		    	  System.out.println("Point 2: " + p.toString());
 				      }

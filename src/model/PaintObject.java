@@ -26,27 +26,26 @@ public abstract class PaintObject {
 	public void setColor(Color c){
 		this.color = c;
 	}
-	public void setPoints(Point p1, Point p2){
-		if (p1.getX() < p2.getX()){
-			if (p1.getY() < p2.getY()){
-				this.p1 = new Point((int)p1.getX(), (int)p1.getY());
-				this.p2 = new Point((int)p2.getX(), (int)p2.getY());
-			}
-			else {
-				this.p1 = new Point((int)p1.getX(), (int)p2.getY());
-				this.p2 = new Point((int)p2.getX(), (int)p1.getY());
-			}
+	public void updatePoints(Point p1, Point p2){
+		double w = getWidth(p1,p2);
+		double h = getHeight(p1,p2);
+		double x1 = p1.getX();
+		double y1 = p1.getY();
+		double x2 = p2.getX();
+		double y2 = p2.getY();
+		double temp;
+		// left of p1
+ 		if (p2.getX() < p1.getX()){
+ 			x1 = p2.getX();
+ 			x2 = p1.getX();
+ 		}
+		// above p1
+		if (p2.getY() < p1.getY()){
+			y1 = p2.getY();
+			y2 = p1.getY();
 		}
-		else {
-			if (p1.getY() < p2.getY()){
-				this.p1 = new Point((int)p2.getX(), (int)p1.getY());
-				this.p2 = new Point((int)p1.getX(), (int)p2.getY());
-			}
-			else {
-				this.p1 = new Point((int)p2.getX(), (int)p2.getY());
-				this.p2 = new Point((int)p1.getX(), (int)p1.getY());
-			}
-		}
+		setPoint1(new Point((int) x1, (int) y1));
+		setPoint2(new Point((int) x2, (int) y2));
 	}
 	public void setPoint1(Point p1){
 		this.p1 = p1;
@@ -70,11 +69,13 @@ public abstract class PaintObject {
 		return this.img;
 	}
 
-	public double getWidth(){
-		return ( Math.abs(this.getPoint1().getX() - this.getPoint2().getX()) );
+	public double getWidth(Point p1, Point p2){
+		//return this.getPoint1().getX() - this.getPoint2().getX();
+		return ( Math.abs(p1.getX() - p2.getX()) );
 	}
-	public double getHeight(){
-		return ( Math.abs(this.getPoint1().getY() - this.getPoint2().getY()) );
+	public double getHeight(Point p1, Point p2){
+		//return this.getPoint1().getY() - this.getPoint2().getY();
+		return ( Math.abs(p1.getY() - p2.getY()) );
 	}
 	public void draw(GraphicsContext gc) {
 		// TODO Auto-generated method stub
@@ -84,14 +85,14 @@ public abstract class PaintObject {
 		}
 		else if (this instanceof Rectangle){
 			gc.setFill(this.getColor());
-			gc.fillRect(this.getPoint1().getX(), this.getPoint1().getY(), this.getWidth(), this.getHeight());
+			gc.fillRect(this.getPoint1().getX(), this.getPoint1().getY(), getWidth(this.getPoint1(), this.getPoint2()), getHeight(this.getPoint1(), this.getPoint2()));
 		}
 		else if (this instanceof Oval){
 			gc.setFill(this.getColor());
-			gc.fillOval(this.getPoint1().getX(), this.getPoint1().getY(), this.getWidth(), this.getHeight());
+			gc.fillOval(this.getPoint1().getX(), this.getPoint1().getY(), getWidth(this.getPoint1(), this.getPoint2()), getHeight(this.getPoint1(), this.getPoint2()));
 		}
 		else if (this instanceof Picture){
-			gc.drawImage(this.getImage(), this.getPoint1().getX(), this.getPoint1().getY(), this.getWidth(), this.getHeight());
+			gc.drawImage(this.getImage(), this.getPoint1().getX(), this.getPoint1().getY(), getWidth(this.getPoint1(), this.getPoint2()), getHeight(this.getPoint1(), this.getPoint2()));
 		}
 	}
 }

@@ -19,21 +19,41 @@ public abstract class PaintObject {
 	private Color color;
 	private Point p1;
 	private Point p2;
+	private Point origin;
 	private Image img;
 	
 	
 	
-	public void setColor(Color c){
-		this.color = c;
-	}
+	
 	public void updatePoints(Point p1, Point p2){
 		double x1 = p1.getX();
 		double y1 = p1.getY();
 		double x2 = p2.getX();
 		double y2 = p2.getY();
 		if (this instanceof Line){
+			setPoint1(p1);
+			setPoint2(p2);
 			return;
 		}
+		else{
+			// left of origin
+	 		if (p2.getX() < this.getOrigin().getX()){
+	 			x1 = p2.getX();
+	 			x2 = this.getOrigin().getX();
+//	 			x1 = x1 - getWidth(this.getOrigin(), p2);
+//	 			x2 = x2 + getWidth(this.getOrigin(), p2);
+	 		}
+			// above origin
+			if (p2.getY() < this.getOrigin().getY()){
+				y1 = p2.getY();
+				y2 = this.getOrigin().getY();
+//				y1 = y1 - getHeight(this.getOrigin(), p2);
+//				y2 = y2 + getHeight(this.getOrigin(), p2);
+			}
+			setPoint1(new Point((int) x1, (int) y1));
+			setPoint2(new Point((int) x2, (int) y2));
+		}
+		/*
 		else{
 			// left of p1
 	 		if (p2.getX() < p1.getX()){
@@ -48,12 +68,28 @@ public abstract class PaintObject {
 			setPoint1(new Point((int) x1, (int) y1));
 			setPoint2(new Point((int) x2, (int) y2));
 		}
+		*/
+	}
+	public Point getOrigin() {
+		return this.origin;
+	}
+	public void setOrigin(Point o){
+		this.origin = o;
+	}
+	public Point getPoint1(){
+		return this.p1;
 	}
 	public void setPoint1(Point p1){
 		this.p1 = p1;
 	}
+	public Point getPoint2(){
+		return this.p2;
+	}
 	public void setPoint2(Point p2){
 		this.p2 = p2;
+	}
+	public Image getImage(){
+		return this.img;
 	}
 	public void setImage(String image_src){
 		this.img = new Image("file:images/doge.jpeg");
@@ -61,15 +97,11 @@ public abstract class PaintObject {
 	public Color getColor(){
 		return this.color;
 	}
-	public Point getPoint1(){
-		return this.p1;
+	public void setColor(Color c){
+		this.color = c;
 	}
-	public Point getPoint2(){
-		return this.p2;
-	}
-	public Image getImage(){
-		return this.img;
-	}
+	
+	
 
 	public double getWidth(Point p1, Point p2){
 		//return this.getPoint1().getX() - this.getPoint2().getX();

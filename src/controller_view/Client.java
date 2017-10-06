@@ -12,12 +12,9 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Alert;
 import javafx.scene.control.ColorPicker;
-import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -45,13 +42,11 @@ public class Client extends Application implements Observer {
 	private GridPane gridPane;
 	private Canvas canvas;
 	private ToggleGroup group;
-	private GraphicsContext gc;
+//	private GraphicsContext gc;
 	private Vector<PaintObject> allPaintObjects;
 	private int currClick;
 	private boolean objDone;
 	private PaintObject currObj;
-//	private Point p1;
- //   private Point p2;
 	  
   public static void main(String[] args) {
     launch(args);
@@ -125,6 +120,27 @@ public class Client extends Application implements Observer {
 	  private Canvas createCanvas() {
 			canvas = new Canvas(800, 550);
 		      
+			canvas.setOnMouseMoved(new EventHandler<MouseEvent>(){
+
+				@Override
+				public void handle(MouseEvent event) {
+					// TODO Auto-generated method stub
+					double x = event.getX();
+					double y = event.getY();
+	//				System.out.println("x: "+ x + "\ty: " + y);
+					if (currClick == 2){
+						// create ghost object
+						Point p2 = new Point();
+						p2.setLocation(x, y);
+						Point p1 = currObj.getPoint1();
+						currObj.updatePoints(p1, p2);
+						allPaintObjects.set(allPaintObjects.size()-1, currObj);
+//						drawGhostPaintObject(currObj, canvas);
+						drawAllPaintObects(allPaintObjects, canvas);
+					}
+				}
+				
+			});
 			canvas.setOnMouseClicked(new EventHandler<MouseEvent>(){
 
 				@Override
@@ -133,35 +149,29 @@ public class Client extends Application implements Observer {
 				      double xLoc = event.getX();
 				      double yLoc = event.getY();	      
 				      String s = group.getSelectedToggle().getUserData().toString();
-				      Color c = colorPicker.getValue(); //.toString();
-		//		      System.out.println(c);
+				      Color c = colorPicker.getValue(); 
 				      if (currClick == 1){
 				    	  Point p1 = new Point();
 				    	  p1.setLocation(xLoc, yLoc);
-				//    	  System.out.println("Point 1: " + p1.toString());
 				      	currObj = createObject(s, p1, p1, c);
 				      	objDone = false;
 				      	currClick = 2;
-		//		      	System.out.println("Point 1: " + p.toString());
+				      	allPaintObjects.add(currObj);
 				      }
 				      else if (currClick == 2){
 
 				    	  Point p2 = new Point();
 				    	  p2.setLocation(xLoc, yLoc);
 				    	  Point p1 = currObj.getPoint1();
-				    	  //currObj.setPoint2(p2);
 				    	  currObj.updatePoints(p1,p2);
+//				    	  System.out.println(allPaintObjects.size());
+				    	  allPaintObjects.set(allPaintObjects.size()-1, currObj);
 				    	  objDone = true;
-		//		    	  System.out.println("Point 2: " + p.toString());
 				      }
 				      if (objDone){
-	//			    	  System.out.println("Point 1: " + p1.toString());
-	//			    	  System.out.println("Point 2: " + p2.toString());
-	//			    	  currObj = createObject(s,p1,p2,c);
-				    	  allPaintObjects.add(currObj);
+//				    	  allPaintObjects.add(currObj);
 				    	  objDone = false;
 				    	  currClick = 1;
-//				    	  System.out.println(allPaintObjects.size());
 				      }
 				      drawAllPaintObects(allPaintObjects, canvas);
 				}
@@ -201,9 +211,17 @@ public class Client extends Application implements Observer {
 	      
 	    }
 	  }
-	  
+	  private void drawGhostPaintObject(PaintObject current, Canvas canvas) {
+		  GraphicsContext gc = canvas.getGraphicsContext2D();
+		  current.draw(gc);
+	  }
+	  private void clearCanvas(Canvas canvas){
+		  GraphicsContext gc = canvas.getGraphicsContext2D();
+		  gc.clearRect(0, 0, 800, 550);
+	  }
 	  private void drawAllPaintObects(Vector<PaintObject> allPaintObjects, Canvas canvas) {
-		    GraphicsContext gc = canvas.getGraphicsContext2D();
+		    clearCanvas(canvas);
+		  	GraphicsContext gc = canvas.getGraphicsContext2D();
 		    for (PaintObject po : allPaintObjects)
 		      po.draw(gc);
 	  }

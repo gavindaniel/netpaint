@@ -27,25 +27,27 @@ public abstract class PaintObject {
 		this.color = c;
 	}
 	public void updatePoints(Point p1, Point p2){
-		double w = getWidth(p1,p2);
-		double h = getHeight(p1,p2);
 		double x1 = p1.getX();
 		double y1 = p1.getY();
 		double x2 = p2.getX();
 		double y2 = p2.getY();
-		double temp;
-		// left of p1
- 		if (p2.getX() < p1.getX()){
- 			x1 = p2.getX();
- 			x2 = p1.getX();
- 		}
-		// above p1
-		if (p2.getY() < p1.getY()){
-			y1 = p2.getY();
-			y2 = p1.getY();
+		if (this instanceof Line){
+			return;
 		}
-		setPoint1(new Point((int) x1, (int) y1));
-		setPoint2(new Point((int) x2, (int) y2));
+		else{
+			// left of p1
+	 		if (p2.getX() < p1.getX()){
+	 			x1 = p2.getX();
+	 			x2 = p1.getX();
+	 		}
+			// above p1
+			if (p2.getY() < p1.getY()){
+				y1 = p2.getY();
+				y2 = p1.getY();
+			}
+			setPoint1(new Point((int) x1, (int) y1));
+			setPoint2(new Point((int) x2, (int) y2));
+		}
 	}
 	public void setPoint1(Point p1){
 		this.p1 = p1;

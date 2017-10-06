@@ -73,7 +73,7 @@ public class Client extends Application implements Observer {
     drawAllPaintObects(allPaintObjects, canvas);
 
  //   all.setCenter(new Label("Just a start"));
-    all.setTop(new Label("top"));
+ //   all.setTop(new Label("top"));
  //   all.setBottom(new Label("bottom"));
     Scene scene = new Scene(all, 800, 650);
 

@@ -2,7 +2,6 @@ package model;
 
 import java.awt.Point;
 
-import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -22,9 +21,6 @@ public abstract class PaintObject {
 	private Point origin;
 	private Image img;
 	
-	
-	
-	
 	public void updatePoints(Point p1, Point p2){
 		double x1 = p1.getX();
 		double y1 = p1.getY();
@@ -40,35 +36,15 @@ public abstract class PaintObject {
 	 		if (p2.getX() < this.getOrigin().getX()){
 	 			x1 = p2.getX();
 	 			x2 = this.getOrigin().getX();
-//	 			x1 = x1 - getWidth(this.getOrigin(), p2);
-//	 			x2 = x2 + getWidth(this.getOrigin(), p2);
 	 		}
 			// above origin
 			if (p2.getY() < this.getOrigin().getY()){
 				y1 = p2.getY();
 				y2 = this.getOrigin().getY();
-//				y1 = y1 - getHeight(this.getOrigin(), p2);
-//				y2 = y2 + getHeight(this.getOrigin(), p2);
 			}
 			setPoint1(new Point((int) x1, (int) y1));
 			setPoint2(new Point((int) x2, (int) y2));
 		}
-		/*
-		else{
-			// left of p1
-	 		if (p2.getX() < p1.getX()){
-	 			x1 = p2.getX();
-	 			x2 = p1.getX();
-	 		}
-			// above p1
-			if (p2.getY() < p1.getY()){
-				y1 = p2.getY();
-				y2 = p1.getY();
-			}
-			setPoint1(new Point((int) x1, (int) y1));
-			setPoint2(new Point((int) x2, (int) y2));
-		}
-		*/
 	}
 	public Point getOrigin() {
 		return this.origin;
@@ -104,15 +80,12 @@ public abstract class PaintObject {
 	
 
 	public double getWidth(Point p1, Point p2){
-		//return this.getPoint1().getX() - this.getPoint2().getX();
 		return ( Math.abs(p1.getX() - p2.getX()) );
 	}
 	public double getHeight(Point p1, Point p2){
-		//return this.getPoint1().getY() - this.getPoint2().getY();
 		return ( Math.abs(p1.getY() - p2.getY()) );
 	}
 	public void draw(GraphicsContext gc) {
-		// TODO Auto-generated method stub
 		if (this instanceof Line){
 			gc.setStroke(this.getColor());
 			gc.strokeLine(this.getPoint1().getX(), this.getPoint1().getY(), this.getPoint2().getX(), this.getPoint2().getY());

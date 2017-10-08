@@ -1,10 +1,13 @@
 package model;
 
 import java.awt.Point;
+import java.io.Serializable;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
+//import javafx.scene.paint.Color;
+import java.awt.Color;
+
 /**
  * PaintObject
  * 
@@ -14,12 +17,13 @@ import javafx.scene.paint.Color;
  * @author Gavin Daniel
  *
  */
-public abstract class PaintObject {
+public abstract class PaintObject implements Serializable{
 	private Color color;
 	private Point p1;
 	private Point p2;
 	private Point origin;
-	private Image img;
+	private String imgFilePath;
+	
 	
 	public void updatePoints(Point p1, Point p2){
 		double x1 = p1.getX();
@@ -46,6 +50,30 @@ public abstract class PaintObject {
 			setPoint2(new Point((int) x2, (int) y2));
 		}
 	}
+	public void draw(GraphicsContext gc) {
+		if (this instanceof Line){
+			gc.setStroke(ColorTypeConverter.Awt2Fx(this.getColor()));
+			gc.strokeLine(this.getPoint1().getX(), this.getPoint1().getY(), this.getPoint2().getX(), this.getPoint2().getY());
+		}
+		else if (this instanceof Rectangle){
+			gc.setFill(ColorTypeConverter.Awt2Fx(this.getColor()));
+			gc.fillRect(this.getPoint1().getX(), this.getPoint1().getY(), getWidth(this.getPoint1(), this.getPoint2()), getHeight(this.getPoint1(), this.getPoint2()));
+		}
+		else if (this instanceof Oval){
+			gc.setFill(ColorTypeConverter.Awt2Fx(this.getColor()));
+			gc.fillOval(this.getPoint1().getX(), this.getPoint1().getY(), getWidth(this.getPoint1(), this.getPoint2()), getHeight(this.getPoint1(), this.getPoint2()));
+		}
+		else if (this instanceof Picture){
+			gc.drawImage(this.getImage(), this.getPoint1().getX(), this.getPoint1().getY(), getWidth(this.getPoint1(), this.getPoint2()), getHeight(this.getPoint1(), this.getPoint2()));
+		}
+	}
+	
+	public double getWidth(Point p1, Point p2){
+		return ( Math.abs(p1.getX() - p2.getX()) );
+	}
+	public double getHeight(Point p1, Point p2){
+		return ( Math.abs(p1.getY() - p2.getY()) );
+	}
 	public Point getOrigin() {
 		return this.origin;
 	}
@@ -65,41 +93,15 @@ public abstract class PaintObject {
 		this.p2 = p2;
 	}
 	public Image getImage(){
-		return this.img;
+		return new Image(this.imgFilePath);
 	}
-	public void setImage(String image_src){
-		this.img = new Image("file:images/doge.jpeg");
+	public void setImageFilePath(String image_src){
+		this.imgFilePath = ("file:images/doge.jpeg");
 	}
 	public Color getColor(){
 		return this.color;
 	}
 	public void setColor(Color c){
 		this.color = c;
-	}
-	
-	
-
-	public double getWidth(Point p1, Point p2){
-		return ( Math.abs(p1.getX() - p2.getX()) );
-	}
-	public double getHeight(Point p1, Point p2){
-		return ( Math.abs(p1.getY() - p2.getY()) );
-	}
-	public void draw(GraphicsContext gc) {
-		if (this instanceof Line){
-			gc.setStroke(this.getColor());
-			gc.strokeLine(this.getPoint1().getX(), this.getPoint1().getY(), this.getPoint2().getX(), this.getPoint2().getY());
-		}
-		else if (this instanceof Rectangle){
-			gc.setFill(this.getColor());
-			gc.fillRect(this.getPoint1().getX(), this.getPoint1().getY(), getWidth(this.getPoint1(), this.getPoint2()), getHeight(this.getPoint1(), this.getPoint2()));
-		}
-		else if (this instanceof Oval){
-			gc.setFill(this.getColor());
-			gc.fillOval(this.getPoint1().getX(), this.getPoint1().getY(), getWidth(this.getPoint1(), this.getPoint2()), getHeight(this.getPoint1(), this.getPoint2()));
-		}
-		else if (this instanceof Picture){
-			gc.drawImage(this.getImage(), this.getPoint1().getX(), this.getPoint1().getY(), getWidth(this.getPoint1(), this.getPoint2()), getHeight(this.getPoint1(), this.getPoint2()));
-		}
 	}
 }

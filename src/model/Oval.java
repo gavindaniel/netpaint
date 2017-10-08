@@ -1,7 +1,7 @@
 package model;
 
 import java.awt.Point;
-import javafx.scene.paint.Color;
+import java.awt.Color;
 import model.PaintObject;
 
 public class Oval extends PaintObject {

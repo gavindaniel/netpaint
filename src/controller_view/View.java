@@ -15,7 +15,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
+import java.awt.Color;
 import model.Line;
 import model.Oval;
 import model.PaintObject;
@@ -33,13 +33,13 @@ public class View extends BorderPane implements Observer {
 	private int currClick;
 	
 	
-	public View(BorderPane window){
+	public View(){
 		gridPane = createGridPane();
 		canvas = createCanvas();
 		allPaintObjects = createVectorOfPaintObjects();
 		currClick = 1;
-		window.setCenter(canvas);
-		window.setBottom(gridPane);
+//		window.setCenter(canvas);
+//		window.setBottom(gridPane);
 		drawAllPaintObjects(allPaintObjects, canvas);
 	}
 	
@@ -78,69 +78,10 @@ public class View extends BorderPane implements Observer {
 	    // return the lower GridPane of Buttons
 	    return gridPane;
 	  }
-  
+	
 	  private Canvas createCanvas() {
-			canvas = new Canvas(800, 550);
-			// mouse movement listener
-			canvas.setOnMouseMoved(new EventHandler<MouseEvent>(){
-				@Override
-				public void handle(MouseEvent event) {
-					// get the location of the mouse 
-					double x = event.getX();
-					double y = event.getY();
-					// check if there has already been one click
-					if (currClick == 2){
-						// create Points
-						Point p1 = currObj.getPoint1();
-						Point p2 = new Point();
-						p2.setLocation(x, y);
-						// udpate the current Object's Points
-						currObj.updatePoints(p1, p2);
-						allPaintObjects.set(allPaintObjects.size()-1, currObj);
-						// draw the current object 
-						drawAllPaintObjects(allPaintObjects, canvas);
-					}
-				}	
-			});
-			// mouse click listener
-			canvas.setOnMouseClicked(new EventHandler<MouseEvent>(){
-				@Override
-				public void handle(MouseEvent event) {	
-					// get location of mouse click
-				    double xLoc = event.getX();
-				    double yLoc = event.getY();	 
-				    // get String of the selected RadioButton & Color of ColorPicker
-				    String s = group.getSelectedToggle().getUserData().toString();
-				    Color c = colorPicker.getValue(); 
-				    // check if this was the first click
-				    if (currClick == 1){
-				    	// create Point 1
-				    	Point p1 = new Point();
-				    	p1.setLocation(xLoc, yLoc);
-				    	// create Object with starting Point 1 & add to PaintObject Array
-				    	currObj = createObject(s, p1, p1, c);
-				    	allPaintObjects.add(currObj);
-				    	// update which click will be next
-				      	currClick = 2; 	
-				    }
-				    // check if this was the second click
-				    else if (currClick == 2){
-				    	// create Points 1 & 2
-				    	Point p1 = currObj.getPoint1();
-				    	Point p2 = new Point();
-				    	p2.setLocation(xLoc, yLoc);
-				    	// update the object's Points 
-				    	currObj.updatePoints(p1,p2);
-				    	allPaintObjects.set(allPaintObjects.size()-1, currObj);
-				    	// update which click will be next 
-				    	currClick = 1;
-				    }
-				    // update the canvas 
-				    drawAllPaintObjects(allPaintObjects, canvas);
-				}
-			});
-			return canvas;
-	}  
+			return new Canvas(800, 550);
+	  }
 	public PaintObject createObject(String s, Point p1, Point p2, Color c){	
 		PaintObject po = new Line(Color.WHITE, new Point(0,0), new Point(0,0));  
 		switch (s){		
@@ -154,7 +95,7 @@ public class View extends BorderPane implements Observer {
 				po = new Oval(c, p1, p2);
 				return po;
 			case "Picture":
-				po = new Picture(p1, p2, "doge.jpg");
+				po = new Picture(p1, p2, "doge.jpeg");
 				return po;
 		}
 		return po;
@@ -171,19 +112,79 @@ public class View extends BorderPane implements Observer {
 		GraphicsContext gc = canvas.getGraphicsContext2D();
 		gc.clearRect(0, 0, 800, 550);
 	}
-	private void drawAllPaintObjects(Vector<PaintObject> allPaintObjects, Canvas canvas) {
+	public void drawAllPaintObjects(Vector<PaintObject> allPaintObjects, Canvas canvas) {
 		clearCanvas(canvas);
 		GraphicsContext gc = canvas.getGraphicsContext2D();
+		System.out.println("drawAllObject vector size : " + allPaintObjects.size());
 		for (PaintObject po : allPaintObjects)
 			po.draw(gc);
+		
+	}
+	public void drawGhostObject(Vector<PaintObject> allPaintObjects, PaintObject current, Canvas canvas) {
+		
+//		System.out.println("ghostObject vector size : " + allPaintObjects.size());
+		if (allPaintObjects.size() > 0){
+			drawAllPaintObjects(allPaintObjects, canvas);
+		}
+		else {
+			clearCanvas(canvas);
+		}
+	//	drawAllPaintObjects(allPaintObjects, canvas);
+		GraphicsContext gc = canvas.getGraphicsContext2D();
+	//	for (PaintObject po : allPaintObjects) {
+	//		po.draw(gc);
+	//	}
+		current.draw(gc);
 	}
 	private Vector<PaintObject> createVectorOfPaintObjects() {
 		Vector<PaintObject> vectorPaintObjects = new Vector<>();
 		return vectorPaintObjects;
 	}
+	public Vector<PaintObject> getVectorOfPaintObjects() {
+		return allPaintObjects;
+	}
 	@Override
 	public void update(Observable o, Object arg) {
 		drawAllPaintObjects(allPaintObjects, canvas);
 	}
-
+	
+	public GridPane getGridPane() {
+		return gridPane;
+	}
+	public void setGridPane(GridPane gp){
+		gridPane = gp;
+	}
+	public ToggleGroup getGroup() {
+		return group;
+	}
+	public void setGroup(ToggleGroup g) {
+		group = g;
+	}
+	public ColorPicker getColorPicker() {
+		return colorPicker;
+	}
+	public void setColorPicker(ColorPicker cp){
+		colorPicker = cp;
+	}
+	public int getCurrentClick() {
+		return currClick;
+	}
+	public void setCurrentClick(int c) {
+		currClick = c;
+	}
+	public PaintObject getCurrentObject() {
+		return currObj;
+	}
+	public void setCurrentObject(PaintObject current) {
+		currObj = current;
+	}
+	public Vector<PaintObject> getAllPaintObjects() {
+		return allPaintObjects;
+	}
+	public void setAllPaintObjects(Vector<PaintObject> v) {
+		allPaintObjects = v;
+	}
+	public Canvas getCanvas() {
+		return canvas;
+	}
 }

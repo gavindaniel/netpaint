@@ -16,6 +16,10 @@ public class Server {
 	private static List<ObjectOutputStream> outputStreams = new Vector<>();
 	private static Vector<PaintObject> allPaintObjects;
 	
+	public Vector<PaintObject> getAllPaintObjects() {
+		return allPaintObjects;
+	}
+	
 	public static void main(String[] args) throws IOException {
 		serverSocket = new ServerSocket(4001);
 		allPaintObjects = new Vector<PaintObject>();
@@ -25,10 +29,10 @@ public class Server {
 		while (true) {
 			Socket socket = serverSocket.accept();
 			ObjectInputStream inputFromClient = new ObjectInputStream(socket.getInputStream());
-			ObjectOutputStream ouputToClient = new ObjectOutputStream(socket.getOutputStream());
+			ObjectOutputStream outputToClient = new ObjectOutputStream(socket.getOutputStream());
       
 			// TODO 1: Maintain a list of output streams so this Server can write to all
-			outputStreams.add(ouputToClient);
+			outputStreams.add(outputToClient);
 
 			// System.out.println("Accepted a new connection from " + socket.getInetAddress());
 
@@ -75,7 +79,6 @@ public class Server {
 			for (ObjectOutputStream stream : outputStreams ){
 				try {
 					stream.reset();
-//					System.out.println("Vector Size sent to Clients : " + all.size());
 					stream.writeObject(newObject);
 				} catch (IOException ioe) {
 				} 
